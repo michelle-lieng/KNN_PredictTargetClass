@@ -1,6 +1,5 @@
 # IMPORT PACKAGES ---------------------------------------------------------------
 import pandas as pd
-import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -17,7 +16,7 @@ from sklearn.model_selection import train_test_split
 X = df.drop(["TARGET CLASS"], axis = 1)
 y = df["TARGET CLASS"]
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state=101)
 
 # STANDARDIZE THE FEATURES (X DATA) ----------------------------------------------
 from sklearn.preprocessing import StandardScaler
@@ -35,7 +34,7 @@ X_test_scaled = pd.DataFrame(X_test_scaled, columns=[X_train.columns])
 from sklearn.neighbors import KNeighborsClassifier
 
 # Create instance
-KNN = KNeighborsClassifier(n_neighbors=3)
+KNN = KNeighborsClassifier(n_neighbors=1)
 KNN.fit(X_train_scaled, y_train)
 
 # USE MODEL TO PREDICT TEST VALUES -----------------------------------------------
@@ -43,6 +42,9 @@ predictions = KNN.predict(X_test_scaled)
 
 # EVALUATE MODEL -----------------------------------------------------------------
 from sklearn.metrics import confusion_matrix, classification_report
+
+print('WITH K = 1')
+print('\n')
 print(confusion_matrix(y_test,predictions))
 print("\n")
 print(classification_report(y_test,predictions))
@@ -72,3 +74,14 @@ plt.title("Error Rate vs. K Value")
 plt.xlabel("K Value")
 plt.ylabel("Error Rate")
 plt.show()
+# k = 40 is the lowest error rate at 0.04 and the earliest 
+
+KNN_40 = KNeighborsClassifier(n_neighbors=40)
+KNN_40.fit(X_train_scaled, y_train)
+predictions_40 = KNN_40.predict(X_test_scaled)
+
+print('WITH K = 40')
+print('\n')
+print(confusion_matrix(y_test,predictions_40))
+print("\n")
+print(classification_report(y_test,predictions_40))
